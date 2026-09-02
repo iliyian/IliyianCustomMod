@@ -210,6 +210,8 @@ namespace IliyianCustomMod
                 foreach (Pawn p in map.mapPawns.AllPawns)
                     GlobalTextureAtlasManager.TryMarkPawnFrameSetDirty(p);
             }
+            // inspect pane / colonist bar portraits live in a separate cache
+            PortraitsCache.Clear();
         }
     }
 
