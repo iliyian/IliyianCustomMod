@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>Iliyian Custom Mod</name>
+	<author>iliyian</author>
+	<packageId>iliyian.custommod</packageId>
+	<supportedVersions>
+		<li>1.6</li>
+	</supportedVersions>
+	<description>iliyian 的个人功能合集 mod (RimWorld 1.6)。
+
+功能列表：
+1. 选中深钻井时显示深层资源覆盖层（绿色格子 + 鼠标悬停显示资源图标和剩余数量）。原版 1.6 要求地图上有正在运行的地基穿透扫描仪才显示，本 mod 移除了该限制。
+
+2. 炮塔会射击正在捕猎你方单位的野生捕食者（狼、熊等）。原版机制中捕食者进入捕食状态后不会进入炮塔的目标缓存，导致炮塔坐视小人被咬。本 mod 在炮塔找不到常规目标时，会搜索射程内正在追捕你方小人或动物的捕食者并开火（需要视线，不会隔墙射击；路过的、正在猎野兔的捕食者不会被打）。
+
+3. 头部装备/头发显示模式（设置页可切换，对人形种族生效）：只显示装备（原版默认，头发被隐藏）/ 不显示装备正常显示头发 / 装备和头发同时显示。
+
+4. 机械师带宽可编辑：选中机械师后新增「编辑机械带宽」gizmo，打开窗口直接设置带宽（按 pawn 持久保存，可随时恢复原版值）。
+
+依赖 Harmony。
+/loadAfter brrainz.harmony
+
+English summary:
+1. Deep resource overlay (green cells + hover tooltip) whenever a deep drill is selected, no scanner required.
+2. Turrets shoot wild predators actively hunting your colonists or animals (line of sight required; passive predators ignored).
+3. Headgear/hair display modes via mod settings: gear only (vanilla) / hide headgear show hair / show both.
+4. Editable mechanitor bandwidth: per-mechanitor override via a gizmo dialog, persisted in the save.
+
+Requires Harmony.</description>
+	<modDependencies>
+		<li>
+			<packageId>brrainz.harmony</packageId>
+			<displayName>Harmony</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+		</li>
+	</modDependencies>
+	<loadAfter>
+		<li>brrainz.harmony</li>
+	</loadAfter>
+</ModMetaData>
