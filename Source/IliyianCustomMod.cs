@@ -324,8 +324,8 @@ namespace IliyianCustomMod
             Widgets.Label(new Rect(0f, y, 90f, 24f), "带宽:");
             Widgets.TextFieldNumeric(new Rect(95f, y - 3f, 110f, 28f), ref value, ref buffer, 0f, 200f);
 
-            Rect minusRect = new Rect(215f, y, 28f, 28f);
-            Rect plusRect = new Rect(248f, y, 28f, 28f);
+            Rect minusRect = new Rect(215f, y - 3f, 28f, 28f);
+            Rect plusRect = new Rect(248f, y - 3f, 28f, 28f);
             if (Widgets.ButtonImage(minusRect, TexButton.Minus))
                 value = Mathf.Max(0, value - 1);
             if (Widgets.ButtonImage(plusRect, TexButton.Plus))
@@ -338,12 +338,12 @@ namespace IliyianCustomMod
                 BandwidthOverridesComponent.SetOverride(pawn, value == vanillaValue ? (int?)null : value);
                 Close();
             }
-            if (Widgets.ButtonText(new Rect(btnW + 8f, y, (inRect.width - 16f) / 2f, 30f), "恢复原版值"))
+            if (Widgets.ButtonText(new Rect(btnW + 8f, y, btnW, 30f), "恢复原版值"))
             {
                 BandwidthOverridesComponent.SetOverride(pawn, null);
                 Close();
             }
-            if (Widgets.ButtonText(new Rect(inRect.width / 2f + 8f, y, inRect.width / 2f - 8f, 30f), "取消"))
+            if (Widgets.ButtonText(new Rect(btnW * 2f + 16f, y, btnW, 30f), "取消"))
                 Close();
         }
     }
