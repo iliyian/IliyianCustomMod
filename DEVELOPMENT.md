@@ -96,6 +96,19 @@ public int TotalBandwidth => (int)pawn.GetStatValue(StatDefOf.MechBandwidth);
 - 覆盖值按 `pawn.ThingID` 存在 `GameComponent`（`BandwidthOverridesComponent`），随存档持久化；设回原版值即删除覆盖。
 - 悬停标签私有方法：`DeepResourceGrid.RenderMouseAttachments`，用 `AccessTools.Method` + 反射调用。
 
+### 5. 取消机械师对机械体的征召区域限制
+
+**原版机制**（`RimWorld/Pawn_MechanitorTracker.cs:415`）：
+```csharp
+public bool CanCommandTo(LocalTargetInfo target)
+    => target.Cell.InBounds(pawn.MapHeld)
+       && pawn.Position.DistanceToSquared(target.Cell) < 620.01f;  // 24.9 格半径，硬编码
+```
+- 征召本身**没有**范围检查（`CanDraftMech` 只查低电量和带宽）；限制的是对已征召机械体的**指令**：移动、攻击、多选 goto、浮条菜单，全部经 `MechanitorUtility.InMechanitorCommandRange`（`MechanitorUtility.cs:421`）→ `CanCommandTo` 收敛到这一个方法。
+- `DrawCommandRadius` 画指挥圈时也用 `CanCommandTo` 做格子谓词 —— 开启设置后圈会整圈变白（视觉反馈，无害）。
+
+**补丁点**：`Pawn_MechanitorTracker.CanCommandTo` postfix，设置开启时强制 `__result = true`。单点 patch，所有指令门禁同时失效。
+
 ## 新增功能的标准流程
 
 1. **反编译定位**：在 `/tmp/rwsrc` 里 grep 关键词找到原版类，读懂门禁/缓存/调用链。

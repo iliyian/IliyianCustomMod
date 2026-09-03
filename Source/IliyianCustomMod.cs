@@ -55,7 +55,12 @@ namespace IliyianCustomMod
                 AccessTools.Method(typeof(Pawn_MechanitorTracker), "GetGizmos"),
                 postfix: new HarmonyMethod(typeof(BandwidthPatches), nameof(BandwidthPatches.GetGizmos_Postfix)));
 
-            Log.Message("[IliyianCustomMod] loaded: drill overlay, turrets vs predators, headgear modes, editable bandwidth.");
+            // Feature 5: remove the mechanitor's 24.9-cell command range limit on mechs.
+            harmony.Patch(
+                AccessTools.Method(typeof(Pawn_MechanitorTracker), "CanCommandTo"),
+                postfix: new HarmonyMethod(typeof(MechControlRangePatches), nameof(MechControlRangePatches.CanCommandTo_Postfix)));
+
+            Log.Message("[IliyianCustomMod] loaded: drill overlay, turrets vs predators, headgear modes, editable bandwidth, unlimited mech control range.");
         }
     }
 
@@ -349,6 +354,23 @@ namespace IliyianCustomMod
     }
 
     // =====================================================================
+    // Feature 5: no mech control range limit
+    // =====================================================================
+    public static class MechControlRangePatches
+    {
+        // Vanilla hardcodes the 24.9-cell command ring in
+        // Pawn_MechanitorTracker.CanCommandTo (DistanceToSquared < 620.01f).
+        // Every drafted-command gate on mechs (move / attack / multi-goto /
+        // float menu, all via MechanitorUtility.InMechanitorCommandRange)
+        // routes through this single method, so one postfix lifts them all.
+        public static void CanCommandTo_Postfix(ref bool __result)
+        {
+            if (IliyianCustomModMod.Settings?.UnlimitedMechControlRange == true)
+                __result = true;
+        }
+    }
+
+    // =====================================================================
     // Mod settings
     // =====================================================================
     public class IliyianCustomModMod : Mod
@@ -382,6 +404,9 @@ namespace IliyianCustomMod
                 HeadgearRenderPatches.RefreshAllPawnCaches();
 
             listing.Gap(8f);
+            listing.CheckboxLabeled("取消机械师对机械体的征召区域限制 (原版 24.9 格指挥圈)", ref settings.UnlimitedMechControlRange);
+
+            listing.Gap(8f);
             listing.Label("提示: 机械师选中后可用「编辑机械带宽」gizmo 直接改带宽。");
 
             listing.End();
@@ -392,11 +417,13 @@ namespace IliyianCustomMod
     public class IliyianCustomModSettings : ModSettings
     {
         public HeadgearMode HeadgearMode = HeadgearMode.GearOnly;
+        public bool UnlimitedMechControlRange = false;
 
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Values.Look(ref HeadgearMode, "headgearMode", HeadgearMode.GearOnly);
+            Scribe_Values.Look(ref UnlimitedMechControlRange, "unlimitedMechControlRange", false);
         }
     }
 }
